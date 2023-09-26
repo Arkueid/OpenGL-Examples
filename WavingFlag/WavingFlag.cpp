@@ -95,9 +95,9 @@ void Draw() {
 
 	// 正弦波相关参数
 	const float PI = glm::pi<float>();
-	float angleSpan = 4 * PI;  // 相位跨度
+	float angleSpan = 8 * PI;  // 相位跨度
 	float deltaA = angleSpan / W;  // 单个点的相位增量
-	float heightSpan = 0.04;  // 振幅
+	float heightSpan = 0.02;  // 振幅
 
 	totalPoints = (W + H) * 2;
 
@@ -105,7 +105,7 @@ void Draw() {
 		// 上
 		points[i * 5 + 0] = upperLeftX + i * dx;
 		points[i * 5 + 1] = upperLeftY + glm::sin<float>(startAngle + i * deltaA) * heightSpan;
-		points[i * 5 + 2] = 0.0f;
+		points[i * 5 + 2] = 1.0f;
 		points[i * 5 + 3] = ((float)i) / ((float)W);
 		points[i * 5 + 4] = 0.0f;
 		// 下
@@ -139,7 +139,7 @@ void Draw() {
 
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STREAM_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -203,7 +203,7 @@ void timerFunc() {
 		startAngle = 2*PI;
 	}
 	else {
-		startAngle -= 0.001f;
+		startAngle -= 0.002f;
 	}
 	glutPostRedisplay();
 }
@@ -213,7 +213,7 @@ int main() {
 	glutInitWindowPosition(400, 200);
 	glutInitWindowSize(720, 480);
 
-	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_STENCIL);
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
 	glutCreateWindow("Hello, waving flag");
 
 	glewInit();
