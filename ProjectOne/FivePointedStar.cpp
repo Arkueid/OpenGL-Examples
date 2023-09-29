@@ -8,7 +8,7 @@
 unsigned int vaoHandler, vao0, vao1, vao2;
 unsigned int vboHandler;
 unsigned int eboHandler;
-unsigned int program0, program1;
+unsigned int program0, startProgram;
 
 #define FILL_DIFF
 //#define FILL_UNIFORM
@@ -172,7 +172,7 @@ void initFivePointedStar() {
 		}
 }
 
-void createShaderProgram() {
+void createStarProgram() {
 	const char* vertexShaderSource = "#version 330\n"
 		"layout (location = 0) in vec3 aPos;\n"
 		"layout (location = 1) in vec3 aColor;\n"
@@ -231,7 +231,7 @@ void createShaderProgram() {
 	}
 
 	program0 = glCreateProgram();
-	program1 = glCreateProgram();
+	startProgram = glCreateProgram();
 
 	glAttachShader(program0, vertexShader);
 	glAttachShader(program0, fragmentShader2);
@@ -242,12 +242,12 @@ void createShaderProgram() {
 		std::cout << "ERROR::PROGRAM::LINK_FAILED\n" << log << std::endl;
 	}
 
-	glAttachShader(program1, vertexShader);
-	glAttachShader(program1, fragmentShader1);
-	glLinkProgram(program1);
-	glGetProgramiv(program1, GL_LINK_STATUS, &success);
+	glAttachShader(startProgram, vertexShader);
+	glAttachShader(startProgram, fragmentShader1);
+	glLinkProgram(startProgram);
+	glGetProgramiv(startProgram, GL_LINK_STATUS, &success);
 	if (!success) {
-		glGetProgramInfoLog(program1, 512, NULL, log);
+		glGetProgramInfoLog(startProgram, 512, NULL, log);
 		std::cout << "ERROR::PROGRAM::LINK_FAILED\n" << log << std::endl;
 	}
 
@@ -286,7 +286,7 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	if (MODE == 2)
-		glUseProgram(program1);
+		glUseProgram(startProgram);
 	else
 		glUseProgram(program0);
 
@@ -328,11 +328,11 @@ int main() {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 
-	createShaderProgram(); 
+	createStarProgram(); 
 
 	initFivePointedStar();
 
-	glUseProgram(program1);
+	glUseProgram(startProgram);
 	
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);

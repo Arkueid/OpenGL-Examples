@@ -94,13 +94,13 @@ unsigned int initTriangle() {
 	return vao;
 }
 
-unsigned int program1;
+unsigned int startProgram;
 unsigned int vao;
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glUseProgram(program1);
+	glUseProgram(startProgram);
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, 3);//GL_LINESÏß¶Î
 	
@@ -122,10 +122,10 @@ int main() {
 
 	init();
 
-	program1 = initShaderProgram();
+	startProgram = initShaderProgram();
 	vao = initTriangle();
 
-	glUseProgram(program1);
+	glUseProgram(startProgram);
 	glBindVertexArray(vao);
 
 

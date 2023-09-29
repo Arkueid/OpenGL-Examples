@@ -7,9 +7,9 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-unsigned int vao, program;
+unsigned int vao, startProgram;
 
-void createShaderProgram() {
+void createStarProgram() {
 	const char* vsSource = "#version 330 core\n"
 		"layout (location = 0) in vec2 aPos;\n"
 		"void main() {\n"
@@ -29,10 +29,10 @@ void createShaderProgram() {
 	glCompileShader(vShader);
 	glCompileShader(fShader);
 
-	program = glCreateProgram();
-	glAttachShader(program, vShader);
-	glAttachShader(program, fShader);
-	glLinkProgram(program);
+	startProgram = glCreateProgram();
+	glAttachShader(startProgram, vShader);
+	glAttachShader(startProgram, fShader);
+	glLinkProgram(startProgram);
 
 	int success; char infoLog[512];
 	glGetShaderiv(vShader, GL_COMPILE_STATUS, &success);
@@ -47,9 +47,9 @@ void createShaderProgram() {
 		std::cout << "ERROR::FRAGMENT::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
-	glGetProgramiv(program, GL_LINK_STATUS, &success);
+	glGetProgramiv(startProgram, GL_LINK_STATUS, &success);
 	if (!success) {
-		glGetProgramInfoLog(program, 512, NULL, infoLog);
+		glGetProgramInfoLog(startProgram, 512, NULL, infoLog);
 		std::cout << "ERROR::PROGRAM::LINK_FAILED\n" << infoLog << std::endl;
 	}
 
@@ -114,7 +114,7 @@ void display() {
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glUseProgram(program);
+	glUseProgram(startProgram);
 	glBindVertexArray(vao);
 	glDrawElements(GL_LINES, totalPoint * (totalPoint - 1) * 2, GL_UNSIGNED_INT, 0);
 
@@ -137,7 +137,7 @@ int main() {
 
 	glewInit();
 
-	createShaderProgram();
+	createStarProgram();
 
 	DrawDiamond();
 

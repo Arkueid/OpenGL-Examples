@@ -12,10 +12,10 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-unsigned int program, texture;
+unsigned int startProgram, texture;
 unsigned int VBO, VAO, EBO;
 
-void createShaderProgram() {
+void createStarProgram() {
 	unsigned int vShader, fShader;
 	const char* vsSource = "#version 330 core\n"
 		"layout (location = 0) in vec3 aPos;\n"
@@ -34,7 +34,7 @@ void createShaderProgram() {
 		"{\n"
 		"    FragColor = texture(ourTexture, TexCoord);\n"
 		"}\n";
-	program = glCreateProgram();
+	startProgram = glCreateProgram();
 	vShader = glCreateShader(GL_VERTEX_SHADER);
 	fShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(vShader, 1, &vsSource, NULL);
@@ -55,13 +55,13 @@ void createShaderProgram() {
 		std::cout << "ERROR::FRAGMENT::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
-	glAttachShader(program, vShader);
-	glAttachShader(program, fShader);
-	glLinkProgram(program);
+	glAttachShader(startProgram, vShader);
+	glAttachShader(startProgram, fShader);
+	glLinkProgram(startProgram);
 
-	glGetProgramiv(program, GL_LINK_STATUS, &success);
+	glGetProgramiv(startProgram, GL_LINK_STATUS, &success);
 	if (!success) {
-		glGetProgramInfoLog(program, 512, NULL, infoLog);
+		glGetProgramInfoLog(startProgram, 512, NULL, infoLog);
 		std::cout << "ERROR::PROGRAM::LINK_FAILED\n" << infoLog << std::endl;
 	}
 
@@ -186,7 +186,7 @@ void display() {
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glUseProgram(program);
+	glUseProgram(startProgram);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	Draw();
@@ -218,7 +218,7 @@ int main() {
 
 	glewInit();
 
-	createShaderProgram();
+	createStarProgram();
 
 	int width, height, nrChannels;
 	unsigned char* data = stbi_load("guoqi/¹úÆì1024.png", &width, &height, &nrChannels, 0);

@@ -15,7 +15,7 @@ glm::mat4 projection;
 
 unsigned int starShaderProgram, flagShaderProgram;
 
-void createShaderProgram() {
+void createStarProgram() {
 	unsigned int vShader, fShader;
 	int success; char infoLog[512];
 
@@ -123,7 +123,7 @@ void createShaderProgram() {
 * @param	theta	初始旋转角
 * @param	color	填充颜色
 */
-void DrawStar(int cx, int cy, int R, int r, int theta) {
+void createStar(int cx, int cy, int R, int r, int theta) {
 	const float PI = glm::pi<float>();
 
 	float rad = 2 * PI * theta / 360.f;  // 起始绘制角度
@@ -301,10 +301,10 @@ void display() {
 	loc = glGetUniformLocation(starShaderProgram, "ProjectionMatrix");
 	glUniformMatrix4fv(loc, 1, GL_FALSE, &projection[0][0]);
 
-	DrawStar(biggerStarCenterX, biggerStartCenterY, R1, r1, standardRad);
+	createStar(biggerStarCenterX, biggerStartCenterY, R1, r1, standardRad);
 
 	for (int i = 0; i < 4; i++) {
-		DrawStar(stars[i][0], stars[i][1], R2, r2, rads[i]);
+		createStar(stars[i][0], stars[i][1], R2, r2, rads[i]);
 	}
 
 	glUseProgram(0);
@@ -343,7 +343,7 @@ int main() {
 
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	
-	createShaderProgram();
+	createStarProgram();
 
 	glutKeyboardFunc(keyboard);
 	glutReshapeFunc(reshape);
