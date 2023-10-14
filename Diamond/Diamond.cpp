@@ -7,9 +7,9 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-unsigned int vao, startProgram;
+unsigned int VAO, startProgram;
 
-void createStarProgram() {
+void createProgram() {
 	const char* vsSource = "#version 330 core\n"
 		"layout (location = 0) in vec2 aPos;\n"
 		"void main() {\n"
@@ -77,8 +77,8 @@ void DrawDiamond() {
 			int idx = i * circlePoint * 2 + j * 2;
 			float angle = j * da;
 			float R = (i + 1) * dr;
-			points[idx] = R * glm::cos<float>(angle);
-			points[idx + 1] = R * glm::sin<float>(angle);
+			points[idx] = R * glm::cos(angle);
+			points[idx + 1] = R * glm::sin(angle);
 		}
 	}
 	int cnt = 0;
@@ -91,10 +91,10 @@ void DrawDiamond() {
 	}
 
 	unsigned int vbo, ebo;
-	glGenVertexArrays(1, &vao);
+	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
-	glBindVertexArray(vao);
+	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, totalPoint * 2 * sizeof(float), points, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
@@ -115,7 +115,7 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glUseProgram(startProgram);
-	glBindVertexArray(vao);
+	glBindVertexArray(VAO);
 	glDrawElements(GL_LINES, totalPoint * (totalPoint - 1) * 2, GL_UNSIGNED_INT, 0);
 
 	glutSwapBuffers();
@@ -137,7 +137,7 @@ int main() {
 
 	glewInit();
 
-	createStarProgram();
+	createProgram();
 
 	DrawDiamond();
 

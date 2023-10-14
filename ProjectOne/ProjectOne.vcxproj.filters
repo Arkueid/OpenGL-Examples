@@ -18,12 +18,12 @@
     <ClCompile Include="ProjectOne.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="cgProgram.cpp">
+    <ClCompile Include="..\opengl\public\cgProgram.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cgProgram.h">
+    <ClInclude Include="..\opengl\public\cgProgram.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

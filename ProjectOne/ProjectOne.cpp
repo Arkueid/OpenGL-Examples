@@ -29,8 +29,8 @@ void LoadShader()
 {
 	
 	//±‡“Î”Î¡¥Ω”Shader
-	prog.CompileShader("Shader/vertex.vs");
-	prog.CompileShader("Shader/fragment.fs");
+	prog.CompileShader("Shader/general.vs");
+	prog.CompileShader("Shader/general.fs");
 	prog.Link();
 }
 

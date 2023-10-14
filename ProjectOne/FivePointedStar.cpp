@@ -39,13 +39,13 @@ void initFivePointedStar() {
 		// 每次循环计算五角星的一个角所需参数（即两个三角形，六个顶点及其颜色）
 		for (int i = 0; i < 90; i += 18) {
 			// 计算非锐角顶点1
-			points[i] = center[0] + short_r * glm::cos<float>(rad);
-			points[i + 1] = center[1] + short_r * glm::sin<float>(rad);
+			points[i] = center[0] + short_r * glm::cos(rad);
+			points[i + 1] = center[1] + short_r * glm::sin(rad);
 			points[i + 2] = 0.0f;
 			rad += d;
 			// 计算两个三角形共用的锐角顶点
-			points[i + 9 + 3] = points[i + 3] = center[0] + long_r * glm::cos<float>(rad);
-			points[i + 9 + 4] = points[i + 4] = center[1] + long_r * glm::sin<float>(rad);
+			points[i + 9 + 3] = points[i + 3] = center[0] + long_r * glm::cos(rad);
+			points[i + 9 + 4] = points[i + 4] = center[1] + long_r * glm::sin(rad);
 			points[i + 9 + 5] = points[i + 5] = 0.0f;
 			rad += d;
 			// 设置两个三角形共用的五角星中心
@@ -54,8 +54,8 @@ void initFivePointedStar() {
 			points[i + 9 + 8] = points[i + 8] = 0.0f;
 
 			// 计算非锐角顶点2
-			points[i + 9] = center[0] + short_r * glm::cos<float>(rad);
-			points[i + 9 + 1] = center[1] + short_r * glm::sin<float>(rad);
+			points[i + 9] = center[0] + short_r * glm::cos(rad);
+			points[i + 9 + 1] = center[1] + short_r * glm::sin(rad);
 			points[i + 9 + 2] = 0.0f;
 
 			// 设置差分颜色
@@ -99,13 +99,13 @@ void initFivePointedStar() {
 
 		for (int i = 0; i < 30; i += 6) {
 			// 计算非锐角顶点
-			points[i] = points[30] + short_r * glm::cos<float>(rad);
-			points[i + 1] = points[31] + short_r * glm::sin<float>(rad);
+			points[i] = points[30] + short_r * glm::cos(rad);
+			points[i + 1] = points[31] + short_r * glm::sin(rad);
 			points[i + 2] = 0.0f;
 			rad += d;
 			// 计算锐角顶点
-			points[i + 3] = points[30] + long_r * glm::cos<float>(rad);
-			points[i + 4] = points[31] + long_r * glm::sin<float>(rad);
+			points[i + 3] = points[30] + long_r * glm::cos(rad);
+			points[i + 4] = points[31] + long_r * glm::sin(rad);
 			points[i + 5] = 0.0f;
 			rad += d;
 		}
@@ -172,7 +172,7 @@ void initFivePointedStar() {
 		}
 }
 
-void createStarProgram() {
+void createProgram() {
 	const char* vertexShaderSource = "#version 330\n"
 		"layout (location = 0) in vec3 aPos;\n"
 		"layout (location = 1) in vec3 aColor;\n"
@@ -328,7 +328,7 @@ int main() {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 
-	createStarProgram(); 
+	createProgram(); 
 
 	initFivePointedStar();
 

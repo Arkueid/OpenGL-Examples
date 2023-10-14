@@ -17,7 +17,7 @@ glm::mat4 model2(1.0f);
 GLfloat red[] = { 1.0f, 0.0f, 0.0f, 0.0f };
 GLfloat green[] = { 0.0f, 1.0f, 0.0f, 0.0f };
 
-void createStarProgram() {
+void createProgram() {
 	const char* vertexShaderSource = "#version 330\n"
 		"layout (location = 0) in vec3 aPos;\n"
 		"uniform mat4 Projection;\n"
@@ -35,7 +35,6 @@ void createStarProgram() {
 		"void main() {\n"
 		"    FragColor = Color;\n"
 		"}\0";
-
 
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -127,7 +126,7 @@ void createRectProgram() {
 }
 
 unsigned int createStar(int cx, int cy, int R, int r, int theta) {
-	const float PI = glm::pi<float>();
+	constexpr float PI = glm::pi<float>();
 
 	float rad = 2 * PI * theta / 360.f;  // 起始绘制角度
 
@@ -148,13 +147,13 @@ unsigned int createStar(int cx, int cy, int R, int r, int theta) {
 
 	for (int i = 0; i < 30; i += 6) {
 		// 计算非锐角顶点
-		points[i] = points[30] + short_r * glm::cos<float>(rad);
-		points[i + 1] = points[31] + short_r * glm::sin<float>(rad);
+		points[i] = points[30] + short_r * glm::cos(rad);
+		points[i + 1] = points[31] + short_r * glm::sin(rad);
 		points[i + 2] = 0.0f;
 		rad += d;
 		// 计算锐角顶点
-		points[i + 3] = points[30] + long_r * glm::cos<float>(rad);
-		points[i + 4] = points[31] + long_r * glm::sin<float>(rad);
+		points[i + 3] = points[30] + long_r * glm::cos(rad);
+		points[i + 4] = points[31] + long_r * glm::sin(rad);
 		points[i + 5] = 0.0f;
 		rad += d;
 	}
@@ -227,7 +226,17 @@ void createRect(int x, int y, int width, int height) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+}
 
+void reshape(int w, int h) {
+	if (w > h)
+		glViewport((w - h) / 2, 0, h, h);
+	else
+		glViewport(0, (h - w) / 2, w, w);
+
+	int x = w > h ? h : w;
+
+	projection = glm::ortho<float>(0, (float)x, 0, (float)x);
 }
 
 void display() {
@@ -235,14 +244,12 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glUseProgram(startProgram);
-
 	unsigned int loc = glGetUniformLocation(startProgram, "Projection");
 	glUniformMatrix4fv(loc, 1, GL_FALSE, &projection[0][0]);
 	loc = glGetUniformLocation(startProgram, "Model");
 	glUniformMatrix4fv(loc, 1, GL_FALSE, &model1[0][0]);
 	loc = glGetUniformLocation(startProgram, "aColor");
 	glUniform4fv(loc, 1, red);
-
 	glBindVertexArray(star1VAO);
 	glDrawElements(GL_TRIANGLES, 30, GL_UNSIGNED_INT, 0);
 
@@ -266,24 +273,8 @@ void display() {
 	glutSwapBuffers();
 }
 
-void reshape(int w, int h) {
-	if (w > h)
-		glViewport((w - h) / 2, 0, h, h);
-	else
-		glViewport(0, (h - w) / 2, w, w);
-
-	int x = w > h ? h : w;
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(0, x, 0, x);
-	glMatrixMode(GL_MODELVIEW);
-
-	projection = glm::ortho<float>(0, (float)x, 0, (float)x);
-}
-
-
 // 五角星1
+// 如果不进行任何变换，五角星每次都会被绘制在这个位置
 const float localX = 100;  // 初始中心坐标 x
 const float localY = 100;  // 初始中心坐标 y
 
@@ -294,13 +285,13 @@ float R = 50;  // 大圆半径
 float r = R * 0.382;  // 小圆半径
 
 float angle = 0;  // 旋转角
-float alpha = 5;  // 旋转增量
+float alpha = 0.1;  // 旋转增量
 
 float vx = 0.3f;  // x 方向速度
 float vy = 0.05f;  // y 方向速度
 
-
 // 五角星2
+// 如果不进行任何变换，五角星每次都会被绘制在这个位置
 const float localX2 = 300;  // 初始中心坐标 x
 const float localY2 = 300;  // 初始中心坐标 y
 
@@ -311,13 +302,14 @@ float R2 = 50;  // 大圆半径
 float r2 = R2 * 0.382;  // 小圆半径
 
 float angle2 = 0;  // 旋转角
-float alpha2 = -5;  // 旋转增量
+float alpha2 = -0.1;  // 旋转增量
 float scale2 = 1;  // 缩放量
-float ds = 0.0001;  // 缩放量
+float ds = 0.0005;  // 缩放量
 
-float vx2 = -0.1f;  // x 方向速度
-float vy2 = -0.2f;  // y 方向速度
+float vx2 = -0.01;  // x 方向速度
+float vy2 = -0.02f;  // y 方向速度
 
+// 边缘参数
 float rectWidth = 500;
 float rectHeight = 500;
 float rectBottom = 50;
@@ -325,12 +317,16 @@ float rectLeft = 50;
 float rectTop = rectBottom + rectHeight;
 float rectRight = rectLeft + rectWidth;
 
+// glIdleFunc(idle)
+// 每帧进行的操作
 void idle() {
+	// 计算第一个五角星的变换矩阵
 	model1 = glm::mat4(1.0f);
-	model1 = glm::translate(model1, glm::vec3(centerX, centerY, 0.0f));
+	model1 = glm::translate(model1, glm::vec3(centerX, centerY, 0.0f));  // 移动到当前运动的位置
 	model1 = glm::rotate(model1, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
-	model1 = glm::translate(model1, glm::vec3(-localX, -localY, 0.0f));
+	model1 = glm::translate(model1, glm::vec3(-localX, -localY, 0.0f));  // 移动回原点，再进行旋转变换
 
+	// 计算第二个五角星的变换矩阵
 	model2 = glm::mat4(1.0f);
 	model2 = glm::translate(model2, glm::vec3(centerX2, centerY2, 0.0f));
 	model2 = glm::rotate(model2, glm::radians(angle2), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -353,6 +349,7 @@ void idle() {
 		vy = -vy;
 		centerY = rectBottom + R;
 	}
+
 	// 五角星 2 边界检测
 	if (centerX2 + R2 * scale2 >= rectRight) {
 		vx2 = -vx2;
@@ -370,11 +367,18 @@ void idle() {
 		vy2 = -vy2;
 		centerY2 = rectBottom + R2 * scale2;
 	}
+
 	// 五角星彼此互相检测
 	float d = glm::sqrt(glm::pow(centerX - centerX2, 2.0f) + glm::pow(centerY - centerY2, 2.0f));
-	if (d < R + R2 * scale2 || ( d == R + R2 * scale2
-		&& (vx * vx2 < 0 || vy * vy2 < 0))
+	if (d <= R + R2 * scale2 
 		) {
+		// 修正两个五角星的中心坐标，防止两个五角星“粘”在一起
+		d = (R + R2 * scale2 - d) / 2 * glm::abs(centerX - centerX2) / d;
+		centerX += glm::sign(centerX - centerX2) * d;
+		centerX2 += glm::sign(centerX2 - centerX) * d;
+		centerY += glm::sign(centerY - centerY2) * d;
+		centerY2 += glm::sign(centerY2 - centerY) * d;
+		// 完全弹性碰撞，交互各方向的速度
 		float vx1 = vx;
 		float vy1 = vy;
 		vx = vx2;
@@ -383,6 +387,7 @@ void idle() {
 		vy2 = vy1;
 	}
 
+	// 坐标及参数更新
 	centerX += vx;
 	centerY += vy;
 	angle += alpha;
@@ -413,7 +418,7 @@ int main() {
 
 	glewInit();
 
-	createStarProgram();
+	createProgram();
 	createRectProgram();
 	star1VAO = createStar(localX, localY, R, r, angle);
 	star2VAO = createStar(localX2, localY2, R2, r2, angle2);

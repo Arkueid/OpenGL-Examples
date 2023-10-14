@@ -12,10 +12,10 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-unsigned int startProgram, texture;
+unsigned int startProgram, texture1;
 unsigned int VBO, VAO, EBO;
 
-void createStarProgram() {
+void createProgram() {
 	unsigned int vShader, fShader;
 	const char* vsSource = "#version 330 core\n"
 		"layout (location = 0) in vec3 aPos;\n"
@@ -104,14 +104,14 @@ void Draw() {
 	for (int i = 0; i < W; i++) {
 		// ÉÏ
 		points[i * 5 + 0] = upperLeftX + i * dx;
-		points[i * 5 + 1] = upperLeftY + glm::sin<float>(startAngle + i * deltaA) * heightSpan;
+		points[i * 5 + 1] = upperLeftY + glm::sin(startAngle + i * deltaA) * heightSpan;
 		points[i * 5 + 2] = 1.0f;
 		points[i * 5 + 3] = ((float)i) / ((float)W);
 		points[i * 5 + 4] = 0.0f;
 		// ÏÂ
 		int dn = (i + W + H) * 5;
 		points[dn + 0] = upperLeftX + xSpan - i * dx;
-		points[dn + 1] = upperLeftY - ySpan + glm::sin<float>(startAngle + (W - i) * deltaA) * heightSpan;
+		points[dn + 1] = upperLeftY - ySpan + glm::sin(startAngle + (W - i) * deltaA) * heightSpan;
 		points[dn + 2] = 0.0f;
 		points[dn + 3] = 1.0f - ((float)i) / ((float)W);
 		points[dn + 4] = 1.0f;
@@ -187,7 +187,7 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glUseProgram(startProgram);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, texture1);
 
 	Draw();
 
@@ -218,13 +218,13 @@ int main() {
 
 	glewInit();
 
-	createStarProgram();
+	createProgram();
 
 	int width, height, nrChannels;
 	unsigned char* data = stbi_load("guoqi/¹úÆì1024.png", &width, &height, &nrChannels, 0);
 
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glGenTextures(1, &texture1);
+	glBindTexture(GL_TEXTURE_2D, texture1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	stbi_image_free(data);

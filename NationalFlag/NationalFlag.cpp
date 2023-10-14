@@ -15,7 +15,7 @@ glm::mat4 projection;
 
 unsigned int starShaderProgram, flagShaderProgram;
 
-void createStarProgram() {
+void createProgram() {
 	unsigned int vShader, fShader;
 	int success; char infoLog[512];
 
@@ -145,13 +145,13 @@ void createStar(int cx, int cy, int R, int r, int theta) {
 
 	for (int i = 0; i < 30; i += 6) {
 		// º∆À„∑«»ÒΩ«∂•µ„
-		points[i] = points[30] + short_r * glm::cos<float>(rad);
-		points[i + 1] = points[31] + short_r * glm::sin<float>(rad);
+		points[i] = points[30] + short_r * glm::cos(rad);
+		points[i + 1] = points[31] + short_r * glm::sin(rad);
 		points[i + 2] = 0.0f;
 		rad += d;
 		// º∆À„»ÒΩ«∂•µ„
-		points[i + 3] = points[30] + long_r * glm::cos<float>(rad);
-		points[i + 4] = points[31] + long_r * glm::sin<float>(rad);
+		points[i + 3] = points[30] + long_r * glm::cos(rad);
+		points[i + 4] = points[31] + long_r * glm::sin(rad);
 		points[i + 5] = 0.0f;
 		rad += d;
 	}
@@ -343,7 +343,7 @@ int main() {
 
 	glClearColor(0.0, 0.0, 0.0, 0.0);
 	
-	createStarProgram();
+	createProgram();
 
 	glutKeyboardFunc(keyboard);
 	glutReshapeFunc(reshape);

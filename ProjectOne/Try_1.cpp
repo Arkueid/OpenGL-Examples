@@ -95,13 +95,13 @@ unsigned int initTriangle() {
 }
 
 unsigned int startProgram;
-unsigned int vao;
+unsigned int VAO;
 
 void display() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glUseProgram(startProgram);
-	glBindVertexArray(vao);
+	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3);//GL_LINES线段
 	
 	glutSwapBuffers();//交换缓冲（双缓冲时使用）
@@ -123,10 +123,10 @@ int main() {
 	init();
 
 	startProgram = initShaderProgram();
-	vao = initTriangle();
+	VAO = initTriangle();
 
 	glUseProgram(startProgram);
-	glBindVertexArray(vao);
+	glBindVertexArray(VAO);
 
 
 	glutDisplayFunc(display);
