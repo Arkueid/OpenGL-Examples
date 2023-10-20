@@ -45,6 +45,9 @@
     <ClCompile Include="SinSurface.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Ring.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.hpp">
@@ -60,6 +63,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Bezier.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Ring.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

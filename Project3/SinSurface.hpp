@@ -1,3 +1,4 @@
+#pragma once
 #include "Drawable.hpp"
 
 #include <GL/glew.h>

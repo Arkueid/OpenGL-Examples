@@ -29,8 +29,8 @@ void LoadShader()
 {
 	
 	//±‡“Î”Î¡¥Ω”Shader
-	prog.CompileShader("Shader/general.vs");
-	prog.CompileShader("Shader/general.fs");
+	prog.CompileShader("Shader/triangle.vs");
+	prog.CompileShader("Shader/triangle.fs");
 	prog.Link();
 }
 

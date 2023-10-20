@@ -16,46 +16,46 @@ void Cube::createData()
 	vertexCount = 6 * 2 * 3;
 	float vertices[size] = {
 		-a, -a, -a,  0.0f, 0.0f,
-		 a, -a, -a,  1.0f, 0.0f,
-		 a,  a, -a,  1.0f, 1.0f,
-		 a,  a, -a,  1.0f, 1.0f,
-		-a,  a, -a,  0.0f, 1.0f,
+		 a, -a, -a,  0.2f, 0.0f,
+		 a,  a, -a,  0.2f, 0.2f,
+		 a,  a, -a,  0.2f, 0.2f,
+		-a,  a, -a,  0.0f, 0.2f,
 		-a, -a, -a,  0.0f, 0.0f,
 
 		-a, -a,  a,  0.0f, 0.0f,
-		 a, -a,  a,  1.0f, 0.0f,
-		 a,  a,  a,  1.0f, 1.0f,
-		 a,  a,  a,  1.0f, 1.0f,
-		-a,  a,  a,  0.0f, 1.0f,
+		 a, -a,  a,  0.2f, 0.0f,
+		 a,  a,  a,  0.2f, 0.2f,
+		 a,  a,  a,  0.2f, 0.2f,
+		-a,  a,  a,  0.0f, 0.2f,
 		-a, -a,  a,  0.0f, 0.0f,
 
-		-a,  a,  a,  1.0f, 0.0f,
-		-a,  a, -a,  1.0f, 1.0f,
-		-a, -a, -a,  0.0f, 1.0f,
-		-a, -a, -a,  0.0f, 1.0f,
+		-a,  a,  a,  0.2f, 0.0f,
+		-a,  a, -a,  0.2f, 0.2f,
+		-a, -a, -a,  0.0f, 0.2f,
+		-a, -a, -a,  0.0f, 0.2f,
 		-a, -a,  a,  0.0f, 0.0f,
-		-a,  a,  a,  1.0f, 0.0f,
+		-a,  a,  a,  0.2f, 0.0f,
 
-		 a,  a,  a,  1.0f, 0.0f,
-		 a,  a, -a,  1.0f, 1.0f,
-		 a, -a, -a,  0.0f, 1.0f,
-		 a, -a, -a,  0.0f, 1.0f,
+		 a,  a,  a,  0.2f, 0.0f,
+		 a,  a, -a,  0.2f, 0.2f,
+		 a, -a, -a,  0.0f, 0.2f,
+		 a, -a, -a,  0.0f, 0.2f,
 		 a, -a,  a,  0.0f, 0.0f,
-		 a,  a,  a,  1.0f, 0.0f,
+		 a,  a,  a,  0.2f, 0.0f,
 
-		-a, -a, -a,  0.0f, 1.0f,
-		 a, -a, -a,  1.0f, 1.0f,
-		 a, -a,  a,  1.0f, 0.0f,
-		 a, -a,  a,  1.0f, 0.0f,
+		-a, -a, -a,  0.0f, 0.2f,
+		 a, -a, -a,  0.2f, 0.2f,
+		 a, -a,  a,  0.2f, 0.0f,
+		 a, -a,  a,  0.2f, 0.0f,
 		-a, -a,  a,  0.0f, 0.0f,
-		-a, -a, -a,  0.0f, 1.0f,
+		-a, -a, -a,  0.0f, 0.2f,
 
-		-a,  a, -a,  0.0f, 1.0f,
-		 a,  a, -a,  1.0f, 1.0f,
-		 a,  a,  a,  1.0f, 0.0f,
-		 a,  a,  a,  1.0f, 0.0f,
+		-a,  a, -a,  0.0f, 0.2f,
+		 a,  a, -a,  0.2f, 0.2f,
+		 a,  a,  a,  0.2f, 0.0f,
+		 a,  a,  a,  0.2f, 0.0f,
 		-a,  a,  a,  0.0f, 0.0f,
-		-a,  a, -a,  0.0f, 1.0f
+		-a,  a, -a,  0.0f, 0.2f
 	};
 
 	glGenVertexArrays(1, &vao);
@@ -84,12 +84,20 @@ void Cube::SetPos(float x, float y, float z)
 	ModelMatrix *= glm::translate(ModelMatrix, glm::vec3(x, y, z));
 }
 
+void Cube::UpdateTexure(float sOffset, float tOffset)
+{
+	SOffset = sOffset;
+	TOffset = tOffset;
+}
+
 void Cube::Render()
 {
 	glUseProgram(ProgramID);
 	glUniformMatrix4fv(glGetUniformLocation(ProgramID, "model"), 1, GL_FALSE, &ModelMatrix[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(ProgramID, "view"), 1, GL_FALSE, &ViewMatrix[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(ProgramID, "projection"), 1, GL_FALSE, &ProjectionMatrix[0][0]);
+	glUniform1f(glGetUniformLocation(ProgramID, "texSOffset"), SOffset);
+	glUniform1f(glGetUniformLocation(ProgramID, "texTOffset"), TOffset);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, TextureID);
@@ -97,8 +105,9 @@ void Cube::Render()
 	glUniform1i(glGetUniformLocation(ProgramID, "Tex"), 0);
 
 	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, 12*3);
+	glDrawArrays(GL_TRIANGLES, 0, 6 * 2 * 3);
 
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 	glUseProgram(0);
 }

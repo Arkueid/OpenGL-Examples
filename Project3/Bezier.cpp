@@ -34,14 +34,15 @@ void Bezier::Render()
 	glUniformMatrix4fv(glGetUniformLocation(ProgramID, "view"), 1, GL_FALSE, &ViewMatrix[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(ProgramID, "projection"), 1, GL_FALSE, &ProjectionMatrix[0][0]);
 
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, TextureID);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, TextureID);
 
-	//glUniform1i(glGetUniformLocation(ProgramID, "Tex"), 0);
+	glUniform1i(glGetUniformLocation(ProgramID, "Tex"), 0);
 
 	glBindVertexArray(vao);
-	glDrawArrays(GL_LINES, 0, vertexCount+20);
+	glDrawArrays(GL_TRIANGLES, 0, vertexCount+20);
 
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 	glUseProgram(0);
 }
@@ -96,7 +97,7 @@ Point Bezier::bezier_curve(float t) {
 
 void Bezier::createData()
 {
-	const int N = 51;
+	const int N = 31;
 
     const float step = 1.0f / (N - 1); // 贝塞尔曲线步长参数
 

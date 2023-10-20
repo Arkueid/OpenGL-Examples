@@ -70,7 +70,7 @@ void DrawDiamond() {
 	totalPoint = circleCount * circlePoint;
 
 	float* points = new float[circleCount * circlePoint * 2];
-	unsigned int* indices = new unsigned int[totalPoint * (totalPoint - 1) * 2];
+	unsigned int* indices = new unsigned int[totalPoint * (totalPoint - 1)];
 
 	for (int i = 0; i < circleCount; i++) {
 		for (int j = 0; j < circlePoint; j++) {
@@ -83,12 +83,13 @@ void DrawDiamond() {
 	}
 	int cnt = 0;
 	for (int i = 0; i < totalPoint; i++) {
-		for (int j = 0; j < totalPoint; j++) {
-			if (i == j) continue;
+		for (int j = i+1; j < totalPoint; j++) {
 			indices[cnt++] = i;
 			indices[cnt++] = j;
 		}
 	}
+
+	printf("%d\n", cnt/2);
 
 	unsigned int vbo, ebo;
 	glGenVertexArrays(1, &VAO);
@@ -101,7 +102,7 @@ void DrawDiamond() {
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalPoint * (totalPoint - 1) * 2 * sizeof(int), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalPoint * (totalPoint - 1) * sizeof(int), indices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -116,7 +117,7 @@ void display() {
 
 	glUseProgram(startProgram);
 	glBindVertexArray(VAO);
-	glDrawElements(GL_LINES, totalPoint * (totalPoint - 1) * 2, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_LINES, totalPoint * (totalPoint - 1), GL_UNSIGNED_INT, 0);
 
 	glutSwapBuffers();
 }

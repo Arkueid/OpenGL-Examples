@@ -14,10 +14,12 @@ public:
 	float A;  // ±ß³¤
 	unsigned int TextureID;
 	unsigned int ProgramID;
+	float SOffset, TOffset;
 
 	Cube(float a);
 	~Cube();
 	void SetPos(float x, float y, float z);
+	void UpdateTexure(float sOffset, float tOffset);
 	void Render();
 	void SetModelMatrix(glm::mat4 model);
 	void SetViewMatrix(glm::mat4 view);

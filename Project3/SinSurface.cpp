@@ -73,8 +73,10 @@ void SinSurface::createData()
 	float alpha = glm::radians(Alpha);  // 正弦相位
 	float dalpha = glm::radians(Delta) / (float)N;  // 相位增量
 
+	float k = 2 / 3;
 	float x = -glm::radians(Delta) / 2;
-	float dx = dalpha * 2 / 3;
+	x *= k;
+	float dx = dalpha;
 
 	float angle = 0;  // 旋转角
 	float dangle = 360.0f / M;  // 旋转角增量

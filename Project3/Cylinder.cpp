@@ -23,9 +23,17 @@ void Cylinder::Render()
 	glUniformMatrix4fv(glGetUniformLocation(ProgramID, "view"), 1, GL_FALSE, &ViewMatrix[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(ProgramID, "projection"), 1, GL_FALSE, &ProjectionMatrix[0][0]);
 
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, TopTextureID);
+	glUniform1i(glGetUniformLocation(ProgramID, "Tex"), 0);
 	glBindVertexArray(vao);
+	glDrawArrays(GL_TRIANGLES, 0, vertexCount/2);  // 绘制底面
 
-	glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, SideTextureID);
+	glUniform1i(glGetUniformLocation(ProgramID, "Tex"), 0);
+	glBindVertexArray(vao);
+	glDrawArrays(GL_TRIANGLES, vertexCount / 2, vertexCount / 2);  // 绘制底面
 
 	glBindVertexArray(0);
 	glUseProgram(0);

@@ -11,9 +11,13 @@ public:
 	glm::vec3 WorldUp;
 	glm::vec3 Front;
 	glm::vec3 Up;
+	float MoveStep = 0.1f;
 
 	float Pitch;
 	float Yaw;
+
+	glm::vec2 LastMousePos;
+	bool moving = false;
 
 	Camera() {
 		Position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -92,23 +96,29 @@ public:
 	{
 		switch (key)
 		{
+		case 'W':
 		case 'w':
-			MoveForward(1.0f);
+			MoveForward(MoveStep);
 			break;
+		case 'S':
 		case 's':
-			MoveBackward(1.0f);
+			MoveBackward(MoveStep);
 			break;
+		case 'A':
 		case 'a':
-			MoveLeft(1.0f);
+			MoveLeft(MoveStep);
 			break;
+		case 'D':
 		case 'd':
-			MoveRight(1.0f);
+			MoveRight(MoveStep);
 			break;
+		case 'Z':
 		case 'z':
-			Move(0.0f, 1.0f, 0.0f);
+			Move(0.0f, MoveStep, 0.0f);
 			break;
+		case 'X':
 		case 'x':
-			Move(0.0f, -1.0f, 0.0f);
+			Move(0.0f, -MoveStep, 0.0f);
 			break;
 		default:
 			break;
@@ -133,6 +143,35 @@ public:
 			break;
 		default:
 			break;
+		}
+	}
+
+	void ProcessMotion(int x, int y)
+	{
+		if (!moving) return;
+
+		float dx = x - LastMousePos.x;
+		float dy = y - LastMousePos.y;
+
+		float sensitivity = 0.5f;
+
+		Turn(-dy * sensitivity, dx * sensitivity);
+
+		LastMousePos.x = x;
+		LastMousePos.y = y;
+	}
+
+	void ProcessMouse(int button, int state, int x, int y)
+	{
+		if (state == 0)  // Êó±ê°´ÏÂ
+		{
+			LastMousePos.x = (float)x;
+			LastMousePos.y = (float)y;
+			moving = true;
+		}
+		else if (state == 1)
+		{
+			moving = false;
 		}
 	}
 

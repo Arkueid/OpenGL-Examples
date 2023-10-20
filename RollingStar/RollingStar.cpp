@@ -317,7 +317,7 @@ float rectLeft = 50;
 float rectTop = rectBottom + rectHeight;
 float rectRight = rectLeft + rectWidth;
 
-// glIdleFunc(idle)
+// glutIdleFunc(idle)
 // 每帧进行的操作
 void idle() {
 	// 计算第一个五角星的变换矩阵
