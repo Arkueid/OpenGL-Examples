@@ -65,6 +65,7 @@ void initTriangle(void)
 
 	glBindBuffer(GL_ARRAY_BUFFER, vboHandle[1]);//缓冲区数据（颜色）和顶点绑定
 	glBufferData(GL_ARRAY_BUFFER, 3 * 3 * sizeof(float), color, GL_STATIC_DRAW);//内存数据复制到显存
+
 	glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, ((GLubyte *)NULL + (0)));//Vertex Shader的顶点颜色输入（序号1，颜色）属性对应
 	glEnableVertexAttribArray(1);  //  // 允许Vertex着色器中输入变量1读取显存数据。
 
@@ -111,6 +112,10 @@ void display(void)
 	glutSwapBuffers();//交换缓冲（双缓冲时使用）
 }
 
+void idle() {
+	printf("hello\n");
+}
+
 int main(int argc, char* argv[])
 {
 	glutInitWindowPosition(200, 200);
@@ -128,6 +133,7 @@ int main(int argc, char* argv[])
 	glutDisplayFunc(display);//图形绘制
 	glutReshapeFunc(reshape);//窗口大小变化
 	glutKeyboardFunc(keyboard);//键盘交互
+	glutIdleFunc(idle);
 
 	glutMainLoop();
 

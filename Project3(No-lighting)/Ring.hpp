@@ -1,10 +1,10 @@
 #pragma once
-#include "IDrawable.hpp"
+#include "Drawable.hpp"
 
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-class Ring : IDrawable
+class Ring : Drawable
 {
 public:
 	glm::mat4 ModelMatrix;
@@ -12,7 +12,7 @@ public:
 	glm::mat4 ProjectionMatrix;
 
 	unsigned int TextureID;
-	cgProgram* Program;
+	unsigned int ProgramID;
 
 	float r;
 	float R;
@@ -25,13 +25,11 @@ public:
 	void SetModelMatrix(glm::mat4 model);
 	void SetViewMatrix(glm::mat4 view);
 	void SetProjectionMatrix(glm::mat4 projection);
+	void SetProgram(unsigned int programID);
 	void SetTexture(unsigned int textureID);
-	void SetProgram(cgProgram* programID);
-	cgProgram* GetProgram();
 private:
 	unsigned int vao;
 	unsigned int vbo;
-	unsigned int vbo2;
 	int vertexCount;
 	void createData();
 };

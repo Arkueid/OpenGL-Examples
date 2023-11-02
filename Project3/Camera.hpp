@@ -18,6 +18,7 @@ public:
 
 	glm::vec2 LastMousePos;
 	bool moving = false;
+	bool keyboardTurn = false;
 
 	Camera() {
 		Position = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -127,6 +128,7 @@ public:
 
 	void ProcessSpecialKey(int key, int x, int y)
 	{
+		if (keyboardTurn)
 		switch (key)
 		{
 		case GLUT_KEY_UP:

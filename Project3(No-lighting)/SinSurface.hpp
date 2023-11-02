@@ -4,19 +4,23 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-class Sphere: Drawable {
+class SinSurface : Drawable
+{
 public:
-	glm::mat4 ProjectionMatrix;
 	glm::mat4 ModelMatrix;
 	glm::mat4 ViewMatrix;
+	glm::mat4 ProjectionMatrix;
 
-	float R;
-	unsigned int ProgramID;
 	unsigned int TextureID;
+	unsigned int ProgramID;
 
-	Sphere(float r);
-	~Sphere();
-	void SetPos(float x, float y, float z);
+	float Alpha;  // ³õÊ¼½Ç¶È
+	float Delta;  // ¿ç¶È
+
+	SinSurface(float alpha, float delta);
+	~SinSurface();
+
+	// Drawable
 	void Render();
 	void SetModelMatrix(glm::mat4 model);
 	void SetViewMatrix(glm::mat4 view);
@@ -26,8 +30,6 @@ public:
 private:
 	unsigned int vao;
 	unsigned int vbo;
-	unsigned int vbo2;
-	unsigned int vbo3;
-	int dataSize;
+	int vertexCount;
 	void createData();
 };

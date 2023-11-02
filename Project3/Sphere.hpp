@@ -1,17 +1,17 @@
 #pragma once
-#include "Drawable.hpp"
+#include "IDrawable.hpp"
 
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-class Sphere: Drawable {
+class Sphere: IDrawable {
 public:
 	glm::mat4 ProjectionMatrix;
 	glm::mat4 ModelMatrix;
 	glm::mat4 ViewMatrix;
 
 	float R;
-	unsigned int ProgramID;
+	cgProgram* Program;
 	unsigned int TextureID;
 
 	Sphere(float r);
@@ -21,12 +21,14 @@ public:
 	void SetModelMatrix(glm::mat4 model);
 	void SetViewMatrix(glm::mat4 view);
 	void SetProjectionMatrix(glm::mat4 projection);
-	void SetProgram(unsigned int programID);
+	void SetProgram(cgProgram* program);
+	cgProgram* GetProgram();
 	void SetTexture(unsigned int textureID);
 private:
 	unsigned int vao;
 	unsigned int vbo;
 	unsigned int vbo2;
+	unsigned int vbo3;
 	int dataSize;
 	void createData();
 };

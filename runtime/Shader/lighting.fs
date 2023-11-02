@@ -13,6 +13,7 @@ void main() {
 	float ambientStrength = 0.1;  // 环境光强，无论物体在何处，都有颜色
 	vec3 ambient = ambientStrength * lightColor;  // 环境光
 	vec3 norm = normalize(Normal);  // 归一化
+	
 	vec3 lightDir = normalize(lightPos - FragPos);  // 光线到该点的方向向量
 	float diff = max(dot(norm, lightDir), 0.0);  // 点乘得到cos值，两个向量的模都为1，cos值越大说明入射角越小，反射的光越多，光照越强
 	vec3 diffuse = diff * lightColor;  // 漫反射光线

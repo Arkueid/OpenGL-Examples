@@ -18,10 +18,34 @@
     <ClCompile Include="Main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="..\opengl\public\cgProgram.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Cube.hpp">
+      <Filter>头文件</Filter>
+    </ClCompile>
     <ClCompile Include="Cube.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Drawable.hpp">
+      <Filter>头文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Cylinder.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Bezier.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SinSurface.hpp">
+      <Filter>头文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SinSurface.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Ring.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,10 +53,19 @@
     <ClInclude Include="Camera.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Cube.hpp">
+    <ClInclude Include="Sphere.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Drawable.hpp">
+    <ClInclude Include="..\opengl\public\cgProgram.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Cylinder.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Bezier.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Ring.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

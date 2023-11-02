@@ -136,12 +136,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\opengl\public\cgProgram.cpp" />
-    <ClCompile Include="Bezier.cpp" />
+    <ClCompile Include="Curve.cpp" />
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="Cube.hpp" />
     <ClCompile Include="Cylinder.cpp" />
-    <ClCompile Include="Drawable.hpp" />
+    <ClCompile Include="IDrawable.hpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Ring.cpp" />
     <ClCompile Include="SinSurface.cpp" />
     <ClCompile Include="SinSurface.hpp" />
@@ -149,9 +150,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\opengl\public\cgProgram.h" />
-    <ClInclude Include="Bezier.hpp" />
+    <ClInclude Include="Curve.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Cylinder.hpp" />
+    <ClInclude Include="Plane.hpp" />
     <ClInclude Include="Ring.hpp" />
     <ClInclude Include="Sphere.hpp" />
   </ItemGroup>

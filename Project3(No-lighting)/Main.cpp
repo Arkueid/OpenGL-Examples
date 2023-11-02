@@ -10,10 +10,9 @@
 #include "Sphere.hpp"
 #include "Cube.hpp"
 #include "Cylinder.hpp"
-#include "Curve.hpp"
+#include "Bezier.hpp"
 #include "SinSurface.hpp"
 #include "Ring.hpp"
-#include "Plane.hpp"
 #include "Camera.hpp"
 #include <cgProgram.h>
 
@@ -23,13 +22,7 @@
 #include <stb_image.h>
 
 Camera camera;
-std::vector<IDrawable*> objects;
-std::vector<IDrawable*> lights;
-
-glm::vec3 lightPos(0.0f, 1.0f, 0.0f);
-glm::vec3 ambient(0.1f, 0.1f, 0.1f);
-glm::vec3 diffuse(1.0f, 0.8f, 0.5f);
-glm::vec3 specular(1.0f, 0.8f, 0.5f);
+std::vector<Drawable*> objects;
 
 int WindowWidth = 800;
 int WindowHeight = 600;
@@ -44,81 +37,30 @@ void display(void) {
 	int size = objects.size();
 	for (int i = 0; i < size; i++)
 	{
-		cgProgram* program = objects[i]->GetProgram();
-		program->Use();
-		program->SetUniform("viewPos", camera.Position);
-		program->SetUniform("light.position", lightPos);
-		program->SetUniform("light.ambient", ambient);
-		program->SetUniform("light.diffuse", diffuse);
-		program->SetUniform("light.specular", specular);
-		if (i == 0 || i == 1 || i == 2 || i == 4)
-			program->SetUniform("material.diffuse", 0);
-		else program->SetUniform("material.diffuse", vec3(1.0f, 0.0f, 0.0f));
-		program->SetUniform("material.shineness", 64.0f);
-		program->SetUniform("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
-		program->SetUniform("viewPos", camera.Position);
-
+		if (i == 3 || i == 5) 
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_ONE, GL_ONE);
+		}
 		objects[i]->SetViewMatrix(camera.GetViewMatrix());
 		objects[i]->SetProjectionMatrix(projection);
 		objects[i]->Render();
+		glDisable(GL_BLEND);
+	}
 
-		program->Unuse();
-	}
-	size = lights.size();
-	for (int i = 0; i < size; i++)
-	{
-		lights[i]->SetViewMatrix(camera.GetViewMatrix());
-		lights[i]->SetProjectionMatrix(projection);
-		lights[i]->Render();
-	}
 	glutSwapBuffers();
 }
 
-float moveStep = 0.1f;
-bool autoOrbit = false;
-
+// 控制摄像机位置
 void keyboard(unsigned char key, int x, int y) {
 	camera.ProcessKey(key, x, y);
-	switch (key)
-	{
-	case 'n':
-	case 'N':
-		lightPos.y += moveStep;
-		break;
-	case 'm':
-	case 'M':
-		lightPos.y -= moveStep;
-		break;
-	case 'r':
-	case 'R':
-		autoOrbit = !autoOrbit;
-		lightPos.x = lightPos.z = 0.0f;
-		lightPos.y = 1.0f;
-		break;
-	default:
-		break;
-	}
+
 	glutPostRedisplay();
 }
 
+// 控制摄像机角度
 void specialKey(int key, int x, int y) {
-	switch (key)
-	{
-	case GLUT_KEY_UP:
-		lightPos.z -= moveStep;
-		break;
-	case GLUT_KEY_DOWN:
-		lightPos.z += moveStep;
-		break;
-	case GLUT_KEY_LEFT:
-		lightPos.x -= moveStep;
-		break;
-	case GLUT_KEY_RIGHT:
-		lightPos.x += moveStep;
-		break;
-	default:
-		break;
-	}
+	camera.ProcessSpecialKey(key, x, y);
 
 	glutPostRedisplay();
 }
@@ -182,21 +124,19 @@ void idle()
 	cube->UpdateTexure((float)texSOffseti/10.0f, (float)texTOffseti/10.0f);
 	Sphere* sphere = (Sphere*)objects[4];
 	sphere->ModelMatrix = glm::mat4(1.0f);
-	sphere->ModelMatrix *= glm::translate(lightPos);
+	sphere->ModelMatrix *= translate;
+	sphere->ModelMatrix *= glm::translate(glm::vec3(0.0f, -1.5f + 0.5f * glm::sin(glm::radians(angle)), 0.0f));
+	sphere->ModelMatrix *= glm::rotate(glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+	sphere->ModelMatrix *= glm::rotate(glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
+	sphere->ModelMatrix *= glm::translate(glm::vec3(0.24f * glm::cos(glm::radians(angle)), 0.0f, 0.24f * glm::sin(glm::radians(angle))));
 	sphere->ModelMatrix *= scale;
 	Ring* ring = (Ring*)objects[5];
 	ring->ModelMatrix = glm::mat4(1.0f);
 	ring->ModelMatrix *= translate;
-	ring->ModelMatrix *= glm::translate(glm::vec3(0.0f, -1.2f + 0.5f * glm::sin(glm::radians(angle)), 0.0f));
+	ring->ModelMatrix *= glm::translate(glm::vec3(0.0f, -1.5f + 0.5f * glm::sin(glm::radians(angle)), 0.0f));
 	ring->ModelMatrix *= glm::rotate(glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
 	ring->ModelMatrix *= glm::rotate(glm::radians(angle), glm::vec3(1.0f, 0.0f, 0.0f));
 	ring->ModelMatrix *= scale;
-
-	if (autoOrbit) {
-		lightPos.x = 2.5f * glm::cos(glm::radians(angle));
-		lightPos.z = 2.5f * glm::sin(glm::radians(angle));
-		lightPos.y = 3.0f * glm::sin(glm::radians(angle));
-	}
 
 	angle += 1.0f;
 	if (angle >= 360.0f)
@@ -240,53 +180,46 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	cgProgram textureProgram;
-	textureProgram.CompileShader("Shader/lightingTexture.vs");
-	textureProgram.CompileShader("Shader/lightingTexture.fs");
+	textureProgram.CompileShader("Shader/texture.vs");
+	textureProgram.CompileShader("Shader/texture.fs");
 	textureProgram.Link();
 
 	cgProgram program2;
-	program2.CompileShader("Shader/colorLighting.vs");
-	program2.CompileShader("Shader/colorLighting.fs");
+	program2.CompileShader("Shader/general.vs");
+	program2.CompileShader("Shader/general.fs");
 	program2.Link();
 
 	cgProgram program3;
-	program3.CompileShader("Shader/lighting/cube-animation.vs");
-	program3.CompileShader("Shader/lighting/cube-animation.fs");
+	program3.CompileShader("Shader/cube-animation.vs");
+	program3.CompileShader("Shader/cube-animation.fs");
 	program3.Link();
 
-	cgProgram program4;
-	program4.CompileShader("Shader/lightSource.vs");
-	program4.CompileShader("Shader/lightSource.fs");
-	program4.Link();
-
 	stbi_set_flip_vertically_on_load(true);
-	unsigned int texture0, texture1, texture2, texture3;
+	unsigned int texture0, texture1, texture2;
 	texture0 = load_texture("resources/earth1.jpg", GL_RGB, GL_RGB);
 	texture1 = load_texture("resources/fish.bmp", GL_RGB, GL_RGB);
 	texture2 = load_texture("resources/jui.jpg", GL_RGB, GL_RGB);
-	texture3 = load_texture("resources/sun.jpg", GL_RGB, GL_RGB);
 
 	Cube cube(1.0f);
 	Cylinder cylinder(1.0f, 2.0f);
-	Curve curve1;
-	SinSurface sinSurface(180.0f, 180.0f * 9.0f);
+	std::vector<Point> points = { {0.0f,0.0f,0.0f}, {0.8f,0.0f,0.0f}, {0.8f, 2.0f, 0.0f}, {1.6f, 2.0f, 0.0f} }; // 贝塞尔曲线控制点，给定控制点的数量决定贝塞尔曲线的阶数
+	Bezier bezier(points);
+	SinSurface sinSurface(-180.0f, 180.0f * 9.0f);
 	Sphere sphere(0.2f);
 	Ring ring(0.3f, 0.8f);
-	Plane plane;
 
-	cube.SetProgram(&program3);
-	cylinder.SetProgram(&textureProgram);
-	curve1.SetProgram(&textureProgram);
-	sinSurface.SetProgram(&program2);
-	sphere.SetProgram(&program4);
-	ring.SetProgram(&program2);
-	plane.SetProgram(&program2);
+	cube.SetProgram(program3.GetHandle());
+	cylinder.SetProgram(textureProgram.GetHandle());
+	bezier.SetProgram(textureProgram.GetHandle());
+	sinSurface.SetProgram(program2.GetHandle());
+	sphere.SetProgram(textureProgram.GetHandle());
+	ring.SetProgram(program2.GetHandle());
 
 	cube.SetTexture(texture1);
 	cylinder.SetSideTexture(texture0);
 	cylinder.SetTopTexture(texture2);
-	curve1.SetTexture(texture0);
-	sphere.SetTexture(texture3);
+	bezier.SetTexture(texture0);
+	sphere.SetTexture(texture0);
 
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, 1.0f, -1.5f));
@@ -294,15 +227,15 @@ int main() {
 	cube.SetModelMatrix(model);
 
 	model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(-1.0f, 0.3f, 0.0f));
+	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
 	model *= glm::rotate(glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	cylinder.SetModelMatrix(model);
 
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0.0f, -1.4f, -1.0f));
-	model = glm::scale(glm::vec3(0.2f, 0.2f, 0.2f));
-	curve1.SetModelMatrix(model);
+	model = glm::scale(glm::vec3(0.3f, 0.3f, 0.3f));
+	bezier.SetModelMatrix(model);
 
 	model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -318,15 +251,14 @@ int main() {
 	model = glm::translate(model, glm::vec3(0.0f, -1.5f, 0.0f));
 	ring.SetModelMatrix(model);
 
-	objects.push_back((IDrawable*)&cube);
-	objects.push_back((IDrawable*)&curve1);
-	objects.push_back((IDrawable*)&cylinder);
-	objects.push_back((IDrawable*)&sinSurface);
-	objects.push_back((IDrawable*)&sphere);
-	objects.push_back((IDrawable*)&ring);
-	objects.push_back((IDrawable*)&plane);
+	objects.push_back((Drawable*)&cube);
+	objects.push_back((Drawable*)&bezier);
+	objects.push_back((Drawable*)&cylinder);
+	objects.push_back((Drawable*)&sinSurface);
+	objects.push_back((Drawable*)&sphere);
+	objects.push_back((Drawable*)&ring);
 
-	camera.Move(0.0f, 1.0f, 4.0f);
+	camera.Move(0.0f, 0.0f, 4.0f);
 
 	glutDisplayFunc(display);
 	glutSpecialFunc(specialKey);

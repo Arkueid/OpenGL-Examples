@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{4df79d55-30f2-4aa6-b0d0-37afdef2da58}</ProjectGuid>
-    <RootNamespace>TryOne</RootNamespace>
+    <ProjectGuid>{2FACC725-330A-4DC5-BA6D-3F8CB150A150}</ProjectGuid>
+    <RootNamespace>Project3</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -79,12 +79,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\CS\opengl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\CS\opengl\public;D:\CS\opengl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glut32d.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;glut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>editbin /SUBSYSTEM:CONSOLE $(OUTDIR)\$(ProjectName).exe</Command>
@@ -135,7 +135,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\ProjectOne\Try_1.cpp" />
+    <ClCompile Include="..\opengl\public\cgProgram.cpp" />
+    <ClCompile Include="Bezier.cpp" />
+    <ClCompile Include="Cube.cpp" />
+    <ClCompile Include="Cube.hpp" />
+    <ClCompile Include="Cylinder.cpp" />
+    <ClCompile Include="Drawable.hpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Ring.cpp" />
+    <ClCompile Include="SinSurface.cpp" />
+    <ClCompile Include="SinSurface.hpp" />
+    <ClCompile Include="Sphere.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\opengl\public\cgProgram.h" />
+    <ClInclude Include="Bezier.hpp" />
+    <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="Cylinder.hpp" />
+    <ClInclude Include="Ring.hpp" />
+    <ClInclude Include="Sphere.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

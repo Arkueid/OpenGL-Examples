@@ -13,23 +13,25 @@ Cylinder::Cylinder(float r, float h)
 Cylinder::~Cylinder()
 {
 	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &vbo2);
 	glDeleteVertexArrays(1, &vao);
 }
 
 void Cylinder::Render()
 {
-	Program->SetUniform("model", ModelMatrix);
-	Program->SetUniform("view", ViewMatrix);
-	Program->SetUniform("projection", ProjectionMatrix);
+	glUseProgram(ProgramID);
+	glUniformMatrix4fv(glGetUniformLocation(ProgramID, "model"), 1, GL_FALSE, &ModelMatrix[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(ProgramID, "view"), 1, GL_FALSE, &ViewMatrix[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(ProgramID, "projection"), 1, GL_FALSE, &ProjectionMatrix[0][0]);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, TopTextureID);
+	glUniform1i(glGetUniformLocation(ProgramID, "Tex"), 0);
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, vertexCount/2);  // 绘制底面
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, SideTextureID);
+	glUniform1i(glGetUniformLocation(ProgramID, "Tex"), 0);
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, vertexCount / 2, vertexCount / 2);  // 绘制底面
 
@@ -52,14 +54,9 @@ void Cylinder::SetProjectionMatrix(glm::mat4 projection)
 	ProjectionMatrix = projection;
 }
 
-void Cylinder::SetProgram(cgProgram* program)
+void Cylinder::SetProgram(unsigned int programID)
 {
-	Program = program;
-}
-
-cgProgram* Cylinder::GetProgram()
-{
-	return Program;
+	ProgramID = programID;
 }
 
 // no use
@@ -87,16 +84,13 @@ void Cylinder::createData()
 	
 	// 顶点信息
 	vertexCount = 2 * M * 3 + M * 2 * 3;
-	float* vertices = new float[vertexCount * 5];
-	float* normals = new float[vertexCount * 3];
+	float *vertices = new float[vertexCount*5];
 
 	int verticesIndex = 0;
-	int normalsIndex = 0;
 
 	// 定义底面
 	for (int i = 0; i < 2; i++) {
 		float y = i == 0 ? y1 : y2;
-		float yn = i == 0 ? -1.0f : 1.0f;
 		for (int j = 0; j < M; j++)
 		{
 			// 定义三角形
@@ -109,10 +103,6 @@ void Cylinder::createData()
 			// 对纹理用圆形裁剪
 			vertices[verticesIndex++] = 0.5f * cos + 0.5f;
 			vertices[verticesIndex++] = 0.5f * sin + 0.5f;
-			// 法向量
-			normals[normalsIndex++] = 0.0f;
-			normals[normalsIndex++] = yn;
-			normals[normalsIndex++] = 0.0f;
 
 			// 第二个顶点
 			cos = glm::cos(glm::radians(alpha + dalpha));
@@ -123,10 +113,6 @@ void Cylinder::createData()
 			// 对纹理用圆形裁剪
 			vertices[verticesIndex++] = 0.5f * cos + 0.5f;
 			vertices[verticesIndex++] = 0.5f * sin + 0.5f;
-			// 法向量
-			normals[normalsIndex++] = 0.0f;
-			normals[normalsIndex++] = yn;
-			normals[normalsIndex++] = 0.0f;
 
 			// 第三个顶点，即圆心（0, -H/2, 0）
 			vertices[verticesIndex++] = 0;
@@ -135,10 +121,7 @@ void Cylinder::createData()
 			// 对纹理用圆形裁剪
 			vertices[verticesIndex++] = 0.5f;
 			vertices[verticesIndex++] = 0.5f;
-			// 法向量
-			normals[normalsIndex++] = 0.0f;
-			normals[normalsIndex++] = yn;
-			normals[normalsIndex++] = 0.0f;
+
 			alpha += dalpha;
 		}
 	}
@@ -163,10 +146,6 @@ void Cylinder::createData()
 		// 定义纹理
 		vertices[verticesIndex++] = texX;
 		vertices[verticesIndex++] = 0.0f;
-		// 法向量
-		normals[normalsIndex++] = x1;
-		normals[normalsIndex++] = 0.0f;
-		normals[normalsIndex++] = z1;
 		// 第二个顶点
 		vertices[verticesIndex++] = x2;
 		vertices[verticesIndex++] = y1;
@@ -174,10 +153,6 @@ void Cylinder::createData()
 		// 定义纹理
 		vertices[verticesIndex++] = texX + dtexX;
 		vertices[verticesIndex++] = 0.0f;
-		// 法向量
-		normals[normalsIndex++] = x2;
-		normals[normalsIndex++] = 0.0f;
-		normals[normalsIndex++] = z2;
 		// 第三个顶点
 		vertices[verticesIndex++] = x1;
 		vertices[verticesIndex++] = y2;
@@ -185,10 +160,6 @@ void Cylinder::createData()
 		// 定义纹理
 		vertices[verticesIndex++] = texX;
 		vertices[verticesIndex++] = 1.0f;
-		// 法向量
-		normals[normalsIndex++] = x1;
-		normals[normalsIndex++] = 0.0f;
-		normals[normalsIndex++] = z1;
 
 		// 定义第二个三角形
 		// 第一个顶点
@@ -198,10 +169,6 @@ void Cylinder::createData()
 		// 定义纹理
 		vertices[verticesIndex++] = texX;
 		vertices[verticesIndex++] = 1.0f;
-		// 法向量
-		normals[normalsIndex++] = x1;
-		normals[normalsIndex++] = 0.0f;
-		normals[normalsIndex++] = z1;
 		// 第二个顶点
 		vertices[verticesIndex++] = x2;
 		vertices[verticesIndex++] = y2;
@@ -209,21 +176,11 @@ void Cylinder::createData()
 		// 定义纹理
 		vertices[verticesIndex++] = texX + dtexX;
 		vertices[verticesIndex++] = 1.0f;
-		// 法向量
-		normals[normalsIndex++] = x2;
-		normals[normalsIndex++] = 0.0f;
-		normals[normalsIndex++] = z2;
 		// 第三个顶点
-		vertices[verticesIndex++] = x2; 
-		vertices[verticesIndex++] = y1; 
-		vertices[verticesIndex++] = z2;
+		vertices[verticesIndex++] = x2; vertices[verticesIndex++] = y1; vertices[verticesIndex++] = z2;
 		// 定义纹理
 		vertices[verticesIndex++] = texX + dtexX;
 		vertices[verticesIndex++] = 0.0f;
-		// 法向量
-		normals[normalsIndex++] = x2;
-		normals[normalsIndex++] = 0.0f;
-		normals[normalsIndex++] = z2;
 
 		alpha += dalpha;
 		texX += dtexX;
@@ -231,22 +188,17 @@ void Cylinder::createData()
 
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &vbo2);
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, vertexCount * 5 * sizeof(float), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
 	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo2);
-	glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(float), normals, GL_STATIC_DRAW);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
 	delete[] vertices;
-	delete[] normals;
 }

@@ -15,6 +15,7 @@ void Cube::createData()
 	const int size = 6 * 2 * 3 * 5;
 	vertexCount = 6 * 2 * 3;
 	float vertices[size] = {
+		// 后
 		-a, -a, -a,  0.0f, 0.0f,
 		 a, -a, -a,  0.2f, 0.0f,
 		 a,  a, -a,  0.2f, 0.2f,
@@ -22,6 +23,7 @@ void Cube::createData()
 		-a,  a, -a,  0.0f, 0.2f,
 		-a, -a, -a,  0.0f, 0.0f,
 
+		// 前
 		-a, -a,  a,  0.0f, 0.0f,
 		 a, -a,  a,  0.2f, 0.0f,
 		 a,  a,  a,  0.2f, 0.2f,
@@ -29,6 +31,7 @@ void Cube::createData()
 		-a,  a,  a,  0.0f, 0.2f,
 		-a, -a,  a,  0.0f, 0.0f,
 
+		// 左
 		-a,  a,  a,  0.2f, 0.0f,
 		-a,  a, -a,  0.2f, 0.2f,
 		-a, -a, -a,  0.0f, 0.2f,
@@ -36,6 +39,7 @@ void Cube::createData()
 		-a, -a,  a,  0.0f, 0.0f,
 		-a,  a,  a,  0.2f, 0.0f,
 
+		// 右
 		 a,  a,  a,  0.2f, 0.0f,
 		 a,  a, -a,  0.2f, 0.2f,
 		 a, -a, -a,  0.0f, 0.2f,
@@ -43,6 +47,7 @@ void Cube::createData()
 		 a, -a,  a,  0.0f, 0.0f,
 		 a,  a,  a,  0.2f, 0.0f,
 
+		 // 下
 		-a, -a, -a,  0.0f, 0.2f,
 		 a, -a, -a,  0.2f, 0.2f,
 		 a, -a,  a,  0.2f, 0.0f,
@@ -50,6 +55,7 @@ void Cube::createData()
 		-a, -a,  a,  0.0f, 0.0f,
 		-a, -a, -a,  0.0f, 0.2f,
 
+		// 上
 		-a,  a, -a,  0.0f, 0.2f,
 		 a,  a, -a,  0.2f, 0.2f,
 		 a,  a,  a,  0.2f, 0.0f,
@@ -58,8 +64,59 @@ void Cube::createData()
 		-a,  a, -a,  0.0f, 0.2f
 	};
 
+	float normals[6*2*3*3] = {
+		// 后
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		0.0f,  0.0f, -1.0f,
+		
+		// 前
+		0.0f,  0.0f, 1.0f,
+		0.0f,  0.0f, 1.0f,
+		0.0f,  0.0f, 1.0f,
+		0.0f,  0.0f, 1.0f,
+		0.0f,  0.0f, 1.0f,
+		0.0f,  0.0f, 1.0f,
+
+		// 左
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+		-1.0f,  0.0f,  0.0f,
+
+		// 右
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+		1.0f,  0.0f,  0.0f,
+
+		// 上
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+		0.0f, -1.0f,  0.0f,
+
+		// 下
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f,
+		0.0f,  1.0f,  0.0f
+	};
+
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
+	glGenBuffers(1, &vbo2);
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -67,10 +124,13 @@ void Cube::createData()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
 	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo2);
+	glBufferData(GL_ARRAY_BUFFER, vertexCount * 3 * sizeof(float), normals, GL_STATIC_DRAW);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)(0 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 }
 
 Cube::~Cube() 
@@ -92,24 +152,20 @@ void Cube::UpdateTexure(float sOffset, float tOffset)
 
 void Cube::Render()
 {
-	glUseProgram(ProgramID);
-	glUniformMatrix4fv(glGetUniformLocation(ProgramID, "model"), 1, GL_FALSE, &ModelMatrix[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(ProgramID, "view"), 1, GL_FALSE, &ViewMatrix[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(ProgramID, "projection"), 1, GL_FALSE, &ProjectionMatrix[0][0]);
-	glUniform1f(glGetUniformLocation(ProgramID, "texSOffset"), SOffset);
-	glUniform1f(glGetUniformLocation(ProgramID, "texTOffset"), TOffset);
+	Program->SetUniform("model", ModelMatrix);
+	Program->SetUniform("view", ViewMatrix);
+	Program->SetUniform("projection", ProjectionMatrix);
+	Program->SetUniform("texSOffset", SOffset);
+	Program->SetUniform("texTOffset", TOffset);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, TextureID);
 
-	glUniform1i(glGetUniformLocation(ProgramID, "Tex"), 0);
-
 	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, 6 * 2 * 3);
+	glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
-	glUseProgram(0);
 }
 
 void Cube::SetModelMatrix(glm::mat4 model)
@@ -127,12 +183,17 @@ void Cube::SetProjectionMatrix(glm::mat4 projection)
 	ProjectionMatrix = projection;
 }
 
-void Cube::SetProgram(unsigned int programID)
+void Cube::SetProgram(cgProgram* program)
 {
-	ProgramID = programID;
+	Program = program;
 }
 
 void Cube::SetTexture(unsigned int textureID)
 {
 	TextureID = textureID;
+}
+
+cgProgram* Cube::GetProgram()
+{
+	return Program;
 }

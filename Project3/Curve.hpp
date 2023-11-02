@@ -4,7 +4,14 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
-class Ring : IDrawable
+#include <vector>
+
+struct Point
+{
+	float x, y, z;
+};
+
+class Curve : IDrawable
 {
 public:
 	glm::mat4 ModelMatrix;
@@ -14,11 +21,8 @@ public:
 	unsigned int TextureID;
 	cgProgram* Program;
 
-	float r;
-	float R;
-
-	Ring(float r, float R);
-	~Ring();
+	Curve();
+	~Curve();
 
 	// Drawable
 	void Render();
@@ -26,7 +30,7 @@ public:
 	void SetViewMatrix(glm::mat4 view);
 	void SetProjectionMatrix(glm::mat4 projection);
 	void SetTexture(unsigned int textureID);
-	void SetProgram(cgProgram* programID);
+	void SetProgram(cgProgram* program);
 	cgProgram* GetProgram();
 private:
 	unsigned int vao;
@@ -34,4 +38,5 @@ private:
 	unsigned int vbo2;
 	int vertexCount;
 	void createData();
+	Point curve(float t);
 };

@@ -30,13 +30,13 @@
     <ClCompile Include="Cube.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Drawable.hpp">
+    <ClCompile Include="IDrawable.hpp">
       <Filter>头文件</Filter>
     </ClCompile>
     <ClCompile Include="Cylinder.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Bezier.cpp">
+    <ClCompile Include="Curve.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="SinSurface.hpp">
@@ -46,6 +46,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Ring.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,10 +65,13 @@
     <ClInclude Include="Cylinder.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Bezier.hpp">
+    <ClInclude Include="Curve.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Ring.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
